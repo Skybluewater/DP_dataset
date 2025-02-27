@@ -1,4 +1,5 @@
 import moviepy.editor as mp
+import os
 
 def extract_audio_from_video(video_path, audio_path=None):
     """
@@ -10,7 +11,11 @@ def extract_audio_from_video(video_path, audio_path=None):
     """
     video = mp.VideoFileClip(video_path)
     audio = video.audio
-    if audio_path is None:
-        audio_path = video_path.replace('.mp4', '.wav')
+    video_name = os.path.basename(video_path)
+    audio_name = video_name.replace('.mp4', '.wav')
+    if not os.path.exists(video_path.replace('.mp4', '')):
+        os.makedirs(os.path.dirname(video_path))
+    audio_path = audio_path or os.path.join(os.path.dirname(video_path), video_name)
+    audio_path = os.path.join(audio_path, audio_name)
     audio.write_audiofile(audio_path)
     return audio

@@ -105,10 +105,7 @@ def extract_keyframes(frames_folder, **kwargs):
     output_dir = kwargs.get('output_dir', None)
     video_dataset = _load_frame_dataset(frames_folder)
     
-    # Extract the similarities_threshold from kwargs
     similarities_threshold = kwargs.get('similarities_threshold', 0.85)
-    
-    # Remove output_dir from kwargs before passing to _select_keyframes
     kwargs.pop('output_dir', None)
     
     keyframes = _select_keyframes(video_dataset, model, device, preprocess, similarities_threshold, **kwargs)
@@ -120,9 +117,11 @@ def extract_keyframes(frames_folder, **kwargs):
             frame_data = video_dataset[idx]
             img = transforms.ToPILImage()(frame_data['img'])
             match = re.search(r'frame_(\d+\.\d+)', frame_data['file_name'])
+            # Sanitize filename by stripping any embedded directory paths
+            filename = os.path.basename(frame_data['file_name'])
             if match:
-                frame_data['file_name'] = 'keyframe_' + match.group(1) + '.jpg'
-            img.save(os.path.join(output_dir, frame_data['file_name']))
+                filename = 'keyframe_' + match.group(1) + '.jpg'
+            img.save(os.path.join(output_dir, filename))
     
     return keyframes
 

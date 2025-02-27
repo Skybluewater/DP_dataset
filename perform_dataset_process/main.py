@@ -4,19 +4,13 @@ import json
 import os
 
 from openai import OpenAI
-from utils import extract_text_from_audio, align_chunks_with_timestamps, split_video_frames_by_duration, extract_keyframes, extract_audio_from_video
+from utils import extract_text_from_audio, align_chunks_with_timestamps, split_video_frames_by_duration, extract_keyframes, extract_audio_from_video, image_to_base64
 from PROMPT import PROMPTS
 """
     now 
 """
 
-
-def image_to_base64(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-    return encoded_string
-
-image_path = 'test/keyframe_110.10.jpg'
+image_path = 'test/keyframe_144.60.jpg'
 base64_image = image_to_base64(image_path)
 
 client = OpenAI(
@@ -24,8 +18,14 @@ client = OpenAI(
     base_url="https://api.siliconflow.cn/v1"
 )
 
+background = "北京冬奥会开幕式节目《致敬人民 一起向未来》"
+description = "现场大屏幕展现了冰雪运动员的运动瞬间，空中模拟跳台滑雪的发光人形从冰雪五环旁飞过场地内，四组滑冰运动员在雪地上滑出长长的轨迹。"
+prompt = PROMPTS["frame_expansion"][1]
+model = ["Qwen/Qwen2-VL-72B-Instruct", "Qwen/QVQ-72B-Preview"]
+
+
 response = client.chat.completions.create(
-        model="Qwen/QVQ-72B-Preview",
+        model=model[1],
         messages=[
         {
             "role": "user",
@@ -34,13 +34,14 @@ response = client.chat.completions.create(
                     "type": "image_url",
                     "image_url": {
                         "url": f"data:image/jpeg;base64,{base64_image}",
+                        "detail": "high"
                     }
                 },
                 {
                     "type": "text",
-                    "text": PROMPTS["frame_expansion"].format(
-                        background="2022年北京冬奥会开幕式",
-                        description="现在大家听到的歌曲想象是奥运会开幕式的保留曲目，国脚会希望通过这首歌传递，打破隔阂，全世界团结一心的愿景。"
+                    "text": prompt.format(
+                        background=background,
+                        description=description
                     )
                 }
             ]

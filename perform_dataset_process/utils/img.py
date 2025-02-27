@@ -3,6 +3,8 @@ import json
 import re
 from bisect import bisect_left, bisect_right
 import logging
+import base64
+
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +23,7 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
     
     # Load chunk file (default to "chunk_4.json" in image_file_path if not provided)
     if chunk_file_path is None:
-        chunk_file_path = os.path.join(image_file_path, "chunk_4.json")
+        chunk_file_path = os.path.join(image_file_path, f"{os.path.basename(image_file_path)}.json")
     with open(chunk_file_path, "r", encoding="utf-8") as f:
         chunk_file = json.load(f)
         chunks = chunk_file['chunks']
@@ -45,11 +47,11 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
 
         # Find previous chunk (if within 5s before)
         pos_end = bisect_right(chunk_ends, ts) - 1
-        prev_chunk = chunks[pos_end].copy() if (pos_end >= 0 and ts - chunk_ends[pos_end] <= 5) else None
+        prev_chunk = chunks[pos_end].copy() if (pos_end >= 0 and abs(ts - chunk_ends[pos_end]) <= 5) else None
         
         # Find next chunk (if within 5s after)
         pos_start = bisect_left(chunk_starts, ts)
-        next_chunk = chunks[pos_start].copy() if (pos_start < len(chunks) and chunk_starts[pos_start] - ts <= 5) else None
+        next_chunk = chunks[pos_start].copy() if (pos_start < len(chunks) and abs(chunk_starts[pos_start] - ts) <= 5) else None
 
         aligned_results.append({
             "image": img_path,
@@ -69,6 +71,12 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
         json.dump(output, f, ensure_ascii=False, indent=4)
     
     return output
+
+
+def image_to_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    return encoded_string
 
 
 if __name__ == "__main__":
