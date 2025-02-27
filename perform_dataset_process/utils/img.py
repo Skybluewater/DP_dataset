@@ -31,16 +31,15 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
         return []
 
     # Precompute chunk midpoints, starts, and ends (assume sorted chunks)
-    chunk_mids = [(c["start"] + c["end"]) / 2 for c in chunks]
     chunk_starts = [c["start"] for c in chunks]
     chunk_ends = [c["end"] for c in chunks]
 
     aligned_results = []
     for ts, img_path in images:
         # Use binary search to find closest chunk by midpoint
-        pos = bisect_left(chunk_mids, ts)
-        closest = 0 if pos == 0 else (len(chunk_mids)-1 if pos == len(chunk_mids)
-                  else pos if abs(chunk_mids[pos]-ts) < abs(ts - chunk_mids[pos-1]) else pos-1)
+        pos = bisect_left(chunk_starts, ts)
+        closest = 0 if pos == 0 else (len(chunk_starts)-1 if pos == len(chunk_starts)
+                  else pos if abs(chunk_starts[pos]-ts) < abs(ts - chunk_starts[pos-1]) else pos-1)
 
         # Validate overlap: if image timestamp not within chunk range, set to None
         closest_chunk = chunks[closest].copy() if chunks[closest]["start"] <= ts <= chunks[closest]["end"] else None
@@ -51,7 +50,7 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
         
         # Find next chunk (if within 5s after)
         pos_start = bisect_left(chunk_starts, ts)
-        next_chunk = chunks[pos_start].copy() if (pos_start < len(chunks) and abs(chunk_starts[pos_start] - ts) <= 5) else None
+        next_chunk = None # chunks[pos_start].copy() if (pos_start < len(chunks) and abs(chunk_starts[pos_start] - ts) <= 5) else None
 
         aligned_results.append({
             "image": img_path,

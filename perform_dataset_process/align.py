@@ -2,6 +2,7 @@ import os
 import logging
 
 from utils import align_img_with_chunk
+import argparse
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -27,5 +28,8 @@ def align_img(video_file_dir):
 
 
 if __name__ == "__main__":
-    video_file_dir = "2008BeijingOlympicGames"
-    align_img(video_file_dir)    
+    parser = argparse.ArgumentParser(description="Align images in video files directory.")
+    parser.add_argument("--file_dir", type=str, required=True, help="The directory of the video files.")
+    args = parser.parse_args()
+
+    align_img(args.file_dir)    

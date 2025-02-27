@@ -1,5 +1,7 @@
 import os
 import logging
+import argparse
+
 
 from utils import extract_audio_from_video, extract_text_from_audio, align_chunks_with_timestamps
 
@@ -47,7 +49,10 @@ def extract_chunks(text_dir):
 
 
 if __name__ == "__main__":
-    video_file_dir = "2008BeijingOlympicGames"
+    parser = argparse.ArgumentParser(description="Extract audio from video files directory.")
+    parser.add_argument("--file_dir", type=str, required=True, help="The directory of the video files.")
+    args = parser.parse_args()
+    video_file_dir = args.file_dir
     extract_audio(video_file_dir)
     for dir_name in os.listdir(video_file_dir):
         dir_path = os.path.join(video_file_dir, dir_name)

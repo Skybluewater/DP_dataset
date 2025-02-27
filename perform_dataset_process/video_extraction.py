@@ -1,5 +1,7 @@
 import os
 import logging
+import argparse
+
 
 from utils import split_video_frames_by_duration, extract_keyframes as extract_keyframes_utils
 
@@ -42,7 +44,10 @@ def extract_keyframes(frame_file_dir):
     return keyframes
 
 if __name__ == "__main__":
-    video_file_dir = "2008BeijingOlympicGames"
+    parser = argparse.ArgumentParser("Extract frames from video files dir")
+    parser.add_argument("--file_dir", type=str, required=True, help="Video file dir path")
+    args = parser.parse_args()
+    video_file_dir = args.file_dir
     extract_frames_from_video(video_file_dir)
     for dir_name in os.listdir(video_file_dir):
         dir_path = os.path.join(video_file_dir, dir_name)
