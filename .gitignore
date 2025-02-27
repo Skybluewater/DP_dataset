@@ -27,7 +27,10 @@
 # Ignore txt files
 *.txt
 
-# Ignore python byte code files
+# Ignore python compiled files
 *.pyc
+
+# Ignore json files
+*.json
 
 .vscode/

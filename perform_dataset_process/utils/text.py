@@ -1,8 +1,7 @@
 # video_1, audio_2, text_3, chunk_4
-from funasr import AutoModel
 import json
 from chonkie import SemanticChunker, SentenceChunker
-from embedding_model import SiliconFlowEmbeddings
+from .embedding_model import SiliconFlowEmbeddings
 from sentence_transformers import SentenceTransformer
 from typing import List
 import logging
@@ -24,6 +23,7 @@ def extract_text_from_audio(audio_path):
     """
     # paraformer-zh is a multi-functional asr model
     # use vad, punc, spk or not as you need
+    from funasr import AutoModel
     model = AutoModel(model="paraformer-zh", model_revision="v2.0.4",
                     vad_model="fsmn-vad", vad_model_revision="v2.0.4",
                     punc_model="ct-punc-c", punc_model_revision="v2.0.4",

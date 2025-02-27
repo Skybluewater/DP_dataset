@@ -2,6 +2,9 @@ import os
 import json
 import re
 from bisect import bisect_left, bisect_right
+import logging
+
+log = logging.getLogger(__name__)
 
 def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
     # Load images with timestamps
@@ -12,6 +15,7 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
          if (match := pattern.match(file))],
         key=lambda x: x[0]
     )
+    log.info(f"Found {len(images)} key frames.")
     if not images:
         return []
     
@@ -20,7 +24,7 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
         chunk_file_path = os.path.join(image_file_path, "chunk_4.json")
     with open(chunk_file_path, "r", encoding="utf-8") as f:
         chunk_file = json.load(f)
-        chunks = json.load(f).get("chunks", [])
+        chunks = chunk_file['chunks']
     if not chunks:
         return []
 
@@ -41,11 +45,11 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
 
         # Find previous chunk (if within 5s before)
         pos_end = bisect_right(chunk_ends, ts) - 1
-        prev_chunk = chunks[pos_end].copy() if (pos_end >= 0 and ts - chunk_ends[pos_end]["end"] <= 5) else None
+        prev_chunk = chunks[pos_end].copy() if (pos_end >= 0 and ts - chunk_ends[pos_end] <= 5) else None
         
         # Find next chunk (if within 5s after)
         pos_start = bisect_left(chunk_starts, ts)
-        next_chunk = chunks[pos_start].copy() if (pos_start < len(chunks) and chunks[pos_start]["start"] - ts <= 5) else None
+        next_chunk = chunks[pos_start].copy() if (pos_start < len(chunks) and chunk_starts[pos_start] - ts <= 5) else None
 
         aligned_results.append({
             "image": img_path,
@@ -65,3 +69,7 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
         json.dump(output, f, ensure_ascii=False, indent=4)
     
     return output
+
+
+if __name__ == "__main__":
+    align_img_with_chunk("./output_frames")
