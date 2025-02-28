@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from openai import OpenAI
 import time
+import argparse
 
 # 初始化客户端
 client = OpenAI(
@@ -59,10 +60,14 @@ def download_errors(error_file_id, error_file_path):
     print(f"完整的请求失败信息已保存至本地错误文件error.jsonl\n")
 
 def main():
+    parser = argparse.ArgumentParser(description="Perform batch processing on a JSONL file")
+    parser.add_argument("--file_dir", type=str, required=True, help="Input file path")
+    args = parser.parse_args()
+    file_dir = args.file_dir
     # 文件路径
-    input_file_path = "2022BeijingWinterOlympicGames\data_test.jsonl"  # 可替换为您的输入文件路径
-    output_file_path = "2022BeijingWinterOlympicGames\result.jsonl"  # 可替换为您的输出文件路径
-    error_file_path = "2022BeijingWinterOlympicGames\error.jsonl"  # 可替换为您的错误文件路径
+    input_file_path = f"{file_dir}\data.jsonl"  # 可替换为您的输入文件路径
+    output_file_path = f"{file_dir}\result.jsonl"  # 可替换为您的输出文件路径
+    error_file_path = f"{file_dir}\error.jsonl"  # 可替换为您的错误文件路径
     try:
         # Step 1: 上传包含请求信息的JSONL文件，得到输入文件ID
         input_file_id = upload_file(input_file_path)
