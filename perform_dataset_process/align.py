@@ -20,16 +20,16 @@ log = logging.getLogger(__name__)
 """
 def align_img(video_file_dir):
     # Iterate over video files in the directory
-    for dir_name in os.listdir(video_file_dir):
-        dir_path = os.path.join(video_file_dir, dir_name)
-        if os.path.isdir(dir_path):
-            align_img_with_chunk(dir_path)
-            log.info(f"Aligning images in {dir_name} is done.")
+    align_img_with_chunk(video_file_dir)
+    log.info(f"Aligning images in {dir_name} is done.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Align images in video files directory.")
     parser.add_argument("--file_dir", type=str, required=True, help="The directory of the video files.")
     args = parser.parse_args()
-
-    align_img(args.file_dir)    
+    for dir_name in os.listdir(args.file_dir):
+        subdir = os.path.join(args.file_dir, dir_name)
+        if os.path.isdir(subdir):
+            log.info(f"Aligning images in {dir_name}")
+            align_img_with_chunk(subdir)
