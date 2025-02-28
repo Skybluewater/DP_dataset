@@ -60,9 +60,9 @@ def download_errors(error_file_id, error_file_path):
 
 def main():
     # 文件路径
-    input_file_path = "test.jsonl"  # 可替换为您的输入文件路径
-    output_file_path = "result.jsonl"  # 可替换为您的输出文件路径
-    error_file_path = "error.jsonl"  # 可替换为您的错误文件路径
+    input_file_path = "2022BeijingWinterOlympicGames\data_test.jsonl"  # 可替换为您的输入文件路径
+    output_file_path = "2022BeijingWinterOlympicGames\result.jsonl"  # 可替换为您的输出文件路径
+    error_file_path = "2022BeijingWinterOlympicGames\error.jsonl"  # 可替换为您的错误文件路径
     try:
         # Step 1: 上传包含请求信息的JSONL文件，得到输入文件ID
         input_file_id = upload_file(input_file_path)
