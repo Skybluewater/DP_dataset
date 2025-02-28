@@ -42,7 +42,9 @@ llm_dict = {
 }
 
 
-def format_vlm_message(system_prompt, base64_str, text, model_name:str="qwen-vl-max", id=None):
+def format_vlm_message(
+    system_prompt, base64_str, text, model_name: str = "qwen-vl-max", id=None
+):
     if id is None:
         id = generate_id()
     return {
@@ -68,7 +70,7 @@ def format_vlm_message(system_prompt, base64_str, text, model_name:str="qwen-vl-
     }
 
 
-def format_llm_message(system_prompt, text, model_name:str="deepseek-r1", id=None):
+def format_llm_message(system_prompt, text, model_name: str = "deepseek-r1", id=None):
     if id is None:
         id = generate_id()
     return {
