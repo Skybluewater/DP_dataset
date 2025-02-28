@@ -26,9 +26,7 @@ def align_img_with_chunk(image_file_path, chunk_file_path=None, **kwargs):
 
     # Load chunk file (default to "chunk_4.json" in image_file_path if not provided)
     if chunk_file_path is None:
-        chunk_file_path = os.path.join(
-            image_file_path, f"{os.path.basename(image_file_path)}.json"
-        )
+        chunk_file_path = os.path.join(image_file_path, "chunk_4.json")
     with open(chunk_file_path, "r", encoding="utf-8") as f:
         chunk_file = json.load(f)
         chunks = chunk_file["chunks"]

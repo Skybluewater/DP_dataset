@@ -1,10 +1,11 @@
 # video_1, audio_2, text_3, chunk_4
+import os
 import json
+import logging
 from chonkie import SemanticChunker, SentenceChunker
 from .embedding_model import SiliconFlowEmbeddings
 from sentence_transformers import SentenceTransformer
 from typing import List
-import logging
 
 
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +33,9 @@ def extract_text_from_audio(audio_path):
     res = model.generate(input=audio_path, 
                         batch_size_s=300, 
                         hotword='魔搭')
-    with open(audio_path.replace("wav", "json"), "w", encoding="utf-8") as f:
+    basedir = os.path.dirname(audio_path)
+    save_path = os.path.join(basedir, "text_3.json")
+    with open(save_path, "w", encoding="utf-8") as f:
         json.dump(res[0], f, ensure_ascii=False, indent=4)
     return res[0]
 
@@ -166,7 +169,7 @@ def align_chunks_with_timestamps(text_path, **kwargs):
     output['key'] = output_key
     output['text'] = text
     output['chunks'] = aligned_chunks
-    output_path = text_path.replace("text_3.json", "chunk_4.json")
+    output_path = os.path.dirname(text_path) + "/chunk_4.json"
     
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=4)

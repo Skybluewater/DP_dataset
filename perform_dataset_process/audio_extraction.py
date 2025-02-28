@@ -44,7 +44,7 @@ def extract_chunks(text_dir):
     if not os.path.exists(text_dir):
         os.makedirs(text_dir)
     text_name = os.path.basename(text_dir)
-    text_file_path = os.path.join(text_dir, f"{text_name}.json")
+    text_file_path = os.path.join(text_dir, "text_3.json")
     align_chunks_with_timestamps(text_file_path)
 
 

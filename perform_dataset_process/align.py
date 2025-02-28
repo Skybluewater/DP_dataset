@@ -1,7 +1,7 @@
 import os
 import logging
 
-from utils import align_img_with_chunk
+import utils
 import argparse
 
 logging.basicConfig(level=logging.INFO)
@@ -20,8 +20,8 @@ log = logging.getLogger(__name__)
 """
 def align_img(video_file_dir):
     # Iterate over video files in the directory
-    align_img_with_chunk(video_file_dir)
-    log.info(f"Aligning images in {dir_name} is done.")
+    utils.align_img_with_chunk(video_file_dir)
+    log.info(f"Aligning images in {video_file_dir} is done.")
 
 
 if __name__ == "__main__":
@@ -32,4 +32,4 @@ if __name__ == "__main__":
         subdir = os.path.join(args.file_dir, dir_name)
         if os.path.isdir(subdir):
             log.info(f"Aligning images in {dir_name}")
-            align_img_with_chunk(subdir)
+            utils.align_img_with_chunk(subdir)
