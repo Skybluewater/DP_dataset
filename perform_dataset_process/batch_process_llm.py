@@ -78,7 +78,7 @@ def main():
         while status not in ["completed", "failed", "expired", "cancelled"]:
             status = check_job_status(batch_id)
             print(f"等待任务完成...")
-            time.sleep(10)  # 等待10秒后再次查询状态
+            time.sleep(60)  # 等待10秒后再次查询状态
         # 如果任务失败，则打印错误信息并退出
         if status == "failed":
             batch = client.batches.retrieve(batch_id)

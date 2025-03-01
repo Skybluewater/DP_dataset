@@ -51,7 +51,7 @@ def main():
     parser.add_argument("-o", "--output_dir", type=str, help="Output file path")
     args = parser.parse_args()
     batch_id = args.batch_id if args.batch_id else None
-    output_file_path = args.output_dir if args.output_dir else os.getcwd() + "/result.jsonl"
+    output_file_path = (args.output_dir if args.output_dir else os.getcwd()) + "/result.jsonl"
     error_file_path = os.path.dirname(output_file_path) + "/error.jsonl"
     
     try:
